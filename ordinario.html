@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora Salarial Colombia</title>
+    <link rel="shortcut icon" href="./images/fav.ico" type="image/x-icon">
+    <link rel="stylesheet" href="./css/normalize.css">
+    <link rel="stylesheet" href="./css/estilos.css">
+    <link rel="stylesheet" type="text/css" href="./css/styles.css">
+    <script src="./js/script.js"></script>
+
+    <meta name="theme-color" content="#2091F9">
+
+    <meta name="title" content="Calculadora Salarial">
+    <meta name="description" content="Calcula tu salario o el costo de tu empleado">
+
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://jarcvon0663.github.io/upc/">
+    <meta property="og:title" content="Calculadora Salarial">
+    <meta property="og:description" content="Calcula tu salario o el costo de tu empleado">
+    <meta property="og:image" content="https://jarcvon0663.github.io/upc/images/css.jpg">
+
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://www.serviciosit.tk/">
+    <meta property="twitter:title" content="Calculadora Salarial">
+    <meta property="twitter:description" content="Calcula tu salario o el costo de tu empleado">
+    <meta property="twitter:image" content="https://jarcvon0663.github.io/upc/images/fav.jpg">
+</head>
+
+<body>
+    <a href="empleados2.html" class="back-button">
+        <span class="arrow">&#8592;</span>
+      </a>
+    <section class="calculadora">
+        <div class="container">
+            <h1 id="calculo">Calculadora salarial Colombia</h1>
+            <p>Por favor ingrese los datos y dé click en el botón calcular.</p>
+            <br>
+            <form id="employee-form">
+                <label for="salary">Salario:</label>
+                <input type="text" id="salary" name="salary" value="0">
+                <script>
+                    var salary = document.getElementById("salary");
+                    var format = new Intl.NumberFormat("es-ES");
+                    salary.addEventListener("keyup", function (e) {
+                        var value = e.target.value.replace(/\./g, "").replace(/,/g, ".");
+                        var position = e.target.selectionStart; // guardar la posición del cursor
+                        e.target.value = format.format(value);
+                        e.target.selectionEnd = position; // restaurar la posición del cursor
+                    });
+                </script>
+                <br>
+                <label for="bonuses">Bonificaciones (no prestacionales):</label>
+                <br>
+                <input type="text" id="bonuses" name="bonuses" step="0.01" value="0">
+                <script>
+                    var bonuses = document.getElementById("bonuses");
+                    var format = new Intl.NumberFormat("es-ES");
+                    bonuses.addEventListener("keyup", function (e) {
+                        var value = e.target.value.replace(/\./g, "").replace(/,/g, ".");
+                        var position = e.target.selectionStart; // guardar la posición del cursor
+                        e.target.value = format.format(value);
+                        e.target.selectionEnd = position; // restaurar la posición del cursor
+                    });
+                </script>
+                <br>
+                <label for="days-worked">Días trabajados:</label>
+                <br>
+                <input type="text" id="days-worked" min="1" max="30" placeholder="Ingrese los días trabajados"
+                    value="30">
+                <br>
+                <button type="button" onclick="calculateNetSalary()" id="salario-neto-btn">Calcular</button>
+
+            </form>
+            <div id="result"></div>
+
+            <div id="currency-converter">
+                <h3>Convertidor de Moneda</h3>
+                <input type="text" id="amount" name="amount" step="0.01" value="0" oninput="convertCurrency()">
+                <br>
+                <select id="fromCurrency" name="fromCurrency">
+                    <option value="COP">Peso Colombiano (COP)</option>
+                    <option value="MXN">Peso Mexicano (MXN)</option>
+                    <option value="USD">Dólar Estadounidense (USD)</option>
+                </select>
+                <select id="toCurrency" name="toCurrency">
+                    <option value="USD">Dólar Estadounidense (USD)</option>
+                    <option value="COP">Peso Colombiano (COP)</option>
+                    <option value="MXN">Peso Mexicano (MXN)</option>
+                </select>
+                <button type="button" onclick="convertCurrency()">Convertir</button>
+                <div id="conversionResult"></div>
+            </div>
+            <script>
+                function convertCurrency() {
+                    var amountInput = document.getElementById('amount');
+                    var fromCurrencySelect = document.getElementById('fromCurrency');
+                    var toCurrencySelect = document.getElementById('toCurrency');
+                    var resultDiv = document.getElementById('conversionResult');
+
+                    var amount = parseFloat(amountInput.value);
+                    var fromCurrency = fromCurrencySelect.value;
+                    var toCurrency = toCurrencySelect.value;
+
+                    // Realiza la llamada a la API de ExchangeRate-API para obtener el tipo de cambio
+                    // Puedes utilizar la librería fetch o axios para realizar la solicitud HTTP
+
+                    // Ejemplo de uso de fetch:
+                    fetch('https://api.exchangerate-api.com/v4/latest/' + fromCurrency)
+                        .then(response => response.json())
+                        .then(data => {
+                            var exchangeRate = data.rates[toCurrency];
+                            var convertedAmount = amount * exchangeRate;
+                            var formattedAmount = convertedAmount.toLocaleString('es');
+                            resultDiv.innerHTML = amount.toLocaleString('es') + ' ' + fromCurrency + ' equivale a ' + formattedAmount + ' ' + toCurrency;
+                        })
+                        .catch(error => {
+                            resultDiv.innerHTML = 'Error al obtener el tipo de cambio';
+                            console.error(error);
+                        });
+                }
+            </script>
+        </div>
+    </section>
+</body>
+
+</html>
